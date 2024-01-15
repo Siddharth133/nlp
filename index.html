@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <p>#1. a. Write a program to extract data from text files using Python regular expression?
+        #b. Write a program to Perform Preprocessing (Tokenization, Stop Word Removal and Stemming) of Text.
+
+
+        import re
+
+        def extract_data_from_file(file_path, pattern):
+        extracted_data = []
+        with open(file_path, 'r') as file:
+        for line in file:
+        matches = re.findall(pattern, line)
+        extracted_data.extend(matches)
+        return extracted_data
+
+        file_path = 'your_file.txt' # Replace with your file path
+        pattern = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b' # Example pattern for email extraction
+        extracted_emails = extract_data_from_file(file_path, pattern)
+        print(extracted_emails)
+
+
+        import nltk
+        from nltk.tokenize import word_tokenize
+        from nltk.corpus import stopwords
+        from nltk.stem import PorterStemmer
+
+        nltk.download('punkt')
+        nltk.download('stopwords')
+
+        def preprocess_text(text):
+        # Tokenization
+        tokens = word_tokenize(text)
+
+        # Stop Word Removal
+        stop_words = set(stopwords.words('english'))
+        filtered_tokens = [word for word in tokens if word not in stop_words]
+
+        # Stemming
+        stemmer = PorterStemmer()
+        stemmed_tokens = [stemmer.stem(word) for word in filtered_tokens]
+
+        return stemmed_tokens
+
+        # Example usage
+        text = "This is a sample text for preprocessing. It includes stemming, stop word removal, and tokenization."
+        preprocessed_text = preprocess_text(text)
+        print(preprocessed_text)</p>
+    <br>
+    <p>#a. Write a Python program to create a list with n values. The list of integers
+        #with exactly two occurrences of nineteen and at least three occurrences of five.
+        #Return True Otherwise False.
+        #Sample: Input: [19, 19, 15, 5, 3, 5, 5, 2] Output: True
+        #Input: [19, 15, 15, 5, 3, 3, 5, 2] Output: False
+        #Input: [19, 19, 5, 5, 5, 5, 5] Output: True
+        #b. Write a program to implement N-Gram Model from the given text,
+        #excluding the stop words
+
+
+        def validate_list(lst):
+        return lst.count(19) == 2 and lst.count(5) >= 3
+
+        # Test cases
+        print(validate_list([19, 19, 15, 5, 3, 5, 5, 2])) # Output: True
+        print(validate_list([19, 15, 15, 5, 3, 3, 5, 2])) # Output: False
+        print(validate_list([19, 19, 5, 5, 5, 5, 5])) # Output: True
+
+
+
+
+        import nltk
+        from nltk.util import ngrams
+        from nltk.corpus import stopwords
+        from nltk.tokenize import word_tokenize
+
+        nltk.download('punkt')
+        nltk.download('stopwords')
+
+        def generate_ngrams(text, n):
+        # Tokenize the text
+        tokens = word_tokenize(text)
+
+        # Remove stop words
+        stop_words = set(stopwords.words('english'))
+        tokens = [token for token in tokens if token.lower() not in stop_words and token.isalpha()]
+
+        # Generate n-grams
+        return list(ngrams(tokens, n))
+
+        # Example usage
+        text = "This is a sample text for generating N-Grams, excluding the stop words."
+        n = 2 # For bigrams
+        ngrams = generate_ngrams(text, n)
+        print(ngrams)</p>
+    <br>
+    <p>
+        #a. Write a program to plot the graph with the most frequently distributed word
+        #in the given text.
+        #b. Write a Python program to split a string of words separated by commas and
+        #spaces into two lists, words and separators.
+        #Input: The colors in my studyroom are blue, green, and yellow.
+        #Output:
+        #[['The', 'colors', 'in', 'my', 'studyroom', 'are', 'blue', 'green', 'and', 'yellow.'], [' ',
+        #' ', ' ', ' ', ' ', ' ', ', ', ', ', ' ']]
+
+        import re
+
+        def split_words_and_separators(text):
+        words = re.findall(r'\b\w+\b', text)
+        separators = re.findall(r'\W+', text)
+        return [words, separators]
+
+        input_text = "The colors in my studyroom are blue, green, and yellow."
+        output = split_words_and_separators(input_text)
+        print(output)
+
+
+
+        import matplotlib.pyplot as plt
+        from collections import Counter
+        import re
+
+        def plot_word_frequency(text):
+        words = re.findall(r'\w+', text.lower())
+
+        word_counts = Counter(words)
+
+        plt.figure(figsize=(10, 6))
+        plt.bar(word_counts.keys(), word_counts.values(), color='skyblue')
+        plt.xlabel('Words')
+        plt.ylabel('Frequency')
+        plt.title('Word Frequency Distribution in Text')
+        plt.xticks(rotation=45)
+        plt.show()
+
+        sample_text = "This is a sample text. This text includes some words, and some of these words are repeated. Words
+        like 'this', 'sample', and 'words' appear more than once."
+        plot_word_frequency(sample_text)
+    </p>
+    <br>
+    <p>
+        #4. a. Write a python program extract all the numbers in the file and compute the
+        #sum of the numbers using regular expression.
+        #b. Write a program to extract specific patterns from a given sample sentence
+        #using regular expression-based chunking.
+
+
+        import re
+
+        def sum_of_numbers_in_file(file_path):
+        total_sum = 0
+        with open(file_path, 'r') as file:
+        for line in file:
+        # Finding all numbers in the line
+        numbers = re.findall(r'\b\d+\b', line)
+        total_sum += sum(map(int, numbers))
+        return total_sum
+
+        # Example usage
+        file_path = 'your_file.txt'
+        print("Sum of numbers in the file:", sum_of_numbers_in_file(file_path))
+
+
+        import nltk
+        import re
+        from nltk import pos_tag
+        from nltk.tokenize import word_tokenize
+        from nltk.chunk.regexp import RegexpParser
+
+
+        sentence = "The quick brown fox jumps over the lazy dog."
+
+
+        tokens = word_tokenize(sentence)
+        tagged_tokens = pos_tag(tokens)
+
+        grammar = "NP: {<DT>?<JJ>*<NN>}"
+
+
+                    cp = RegexpParser(grammar)
+
+                    # Chunking
+                    chunked = cp.parse(tagged_tokens)
+
+                    # Extracting and printing the specific patterns (noun phrases)
+                    for subtree in chunked.subtrees(filter=lambda t: t.label() == 'NP'):
+                    print(subtree)
+
+                    # You can also draw the chunk tree (optional, requires tkinter)
+                    # chunked.draw()
+    </p>
+    <br>
+    <p>
+        #5. a. Write a Python program to create a list with n values. The list of integers
+        #with exactly two occurrences of nineteen and at least three occurrences of five.
+        #Return True Otherwise False.
+
+        #Sample: Input: [19, 19, 15, 5, 3, 5, 5, 2] Output: True
+        #Input: [19, 15, 15, 5, 3, 3, 5, 2] Output: False
+        #Input: [19, 19, 5, 5, 5, 5, 5] Output: True
+        #b. Write a program to demonstrate how to use the nltk library to process text
+        #and generate a part-of-speech tag for each word and draw the parsed result.
+
+        import nltk
+        from nltk import pos_tag
+        from nltk.tokenize import word_tokenize
+
+        # Ensure necessary resources are downloaded
+        nltk.download('punkt')
+        nltk.download('averaged_perceptron_tagger')
+
+        def process_text_and_pos_tag(sentence):
+        # Tokenizing the sentence into words
+        tokens = word_tokenize(sentence)
+
+        # Generating part-of-speech tags for each token
+        tagged_tokens = pos_tag(tokens)
+        return tagged_tokens
+
+        # Example sentence
+        sentence = "The quick brown fox jumps over the lazy dog."
+
+        # Process the sentence and generate POS tags
+        pos_tags = process_text_and_pos_tag(sentence)
+        print("Part-of-Speech Tags:", pos_tags)
+
+
+
+        import nltk
+        from nltk import pos_tag
+        from nltk.tokenize import word_tokenize
+
+        # Ensure necessary resources are downloaded
+        nltk.download('punkt')
+        nltk.download('averaged_perceptron_tagger')
+
+        def process_text_and_pos_tag(sentence):
+        tokens = word_tokenize(sentence)
+        tagged_tokens = pos_tag(tokens)
+        return tagged_tokens
+
+        def draw_pos_tree(tagged_tokens):
+        tree = nltk.Tree.fromstring(f"(S {' '.join(f'({pos} {word})' for word, pos in tagged_tokens)})")
+        # Using the .draw() method to display the tree
+        tree.draw()
+
+        # Example sentence
+        sentence = "The quick brown fox jumps over the lazy dog."
+
+        # Process the sentence and generate POS tags
+        pos_tags = process_text_and_pos_tag(sentence)
+        print("Part-of-Speech Tags:", pos_tags)
+
+        # Draw the POS tag tree
+        draw_pos_tree(pos_tags)
+    </p>
+    <br>
+    <p>
+        #a. Write a program to extract all twitter handles from the following text.
+        #Twitter handle is the text that appears after https://twitter.com/ and is a single
+        #word. Also it contains only alphanumeric characters i.e. A-Z a-z , o to 9 and
+        #underscore _
+
+        #b. Write a Program to plot the graph with the most frequently distributed word
+        #without stop words and punctuation in the given text.
+
+
+
+
+        import re
+
+        def extract_twitter_handles(text):
+        pattern = r'https://twitter\.com/([A-Za-z0-9_]+)'
+        return re.findall(pattern, text)
+
+        # Example text
+        text = "Follow us on Twitter at https://twitter.com/example_user and https://twitter.com/another_user123."
+        handles = extract_twitter_handles(text)
+        print("Twitter Handles:", handles)
+
+
+
+        import matplotlib.pyplot as plt
+        from collections import Counter
+        import string
+        import nltk
+        from nltk.corpus import stopwords
+        from nltk.tokenize import word_tokenize
+
+        nltk.download('punkt')
+        nltk.download('stopwords')
+
+        def plot_word_frequency(text):
+        tokens = word_tokenize(text.lower())
+
+
+        tokens = [word for word in tokens if word.isalpha()]
+
+
+        stop_words = set(stopwords.words('english'))
+        filtered_tokens = [word for word in tokens if word not in stop_words]
+
+
+        word_counts = Counter(filtered_tokens)
+
+        # Plotting the frequencies
+        plt.figure(figsize=(10, 6))
+        plt.bar(word_counts.keys(), word_counts.values(), color='skyblue')
+        plt.xlabel('Words')
+        plt.ylabel('Frequency')
+        plt.title('Word Frequency Distribution (Excluding Stop Words and Punctuation)')
+        plt.xticks(rotation=45)
+        plt.show()
+
+        # Example text
+        sample_text = "This is a sample text. This text includes some words, and some of these words are repeated. Words
+        like 'this', 'sample', and 'words' appear more than once."
+        plot_word_frequency(sample_text)
+    </p>
+    <br>
+    <p>
+        #Write a program to demonstrate Morphological Analysis and Perform
+        #Lemmatization based on the Parts of Speech on the given text.
+
+
+        import nltk
+        from nltk import pos_tag
+        from nltk.tokenize import word_tokenize
+        from nltk.corpus import wordnet
+        from nltk.stem import WordNetLemmatizer
+
+        nltk.download('punkt')
+        nltk.download('averaged_perceptron_tagger')
+        nltk.download('wordnet')
+
+        def get_wordnet_pos(tag):
+        """Map POS tag to first character lemmatize() accepts"""
+        tag_dict = {
+        "J": wordnet.ADJ,
+        "N": wordnet.NOUN,
+        "V": wordnet.VERB,
+        "R": wordnet.ADV
+        }
+        return tag_dict.get(tag[0].upper(), wordnet.NOUN)
+
+        def lemmatize_text(text):
+        # Tokenizing the sentence into words
+        tokens = word_tokenize(text)
+
+        # Generating part-of-speech tags for each token
+        tagged_tokens = pos_tag(tokens)
+
+
+        lemmatizer = WordNetLemmatizer()
+
+
+        lemmatized_output = ' '.join([lemmatizer.lemmatize(w, get_wordnet_pos(p)) for w, p in tagged_tokens])
+        return lemmatized_output
+
+        # Example text
+        sentence = "The striped bats are hanging on their feet for best"
+
+        # Perform morphological analysis and lemmatization
+        lemmatized_text = lemmatize_text(sentence)
+        print("Original Text:", sentence)
+        print("Lemmatized Text:", lemmatized_text)
+
+    </p>
+    <br>
+    <p>
+        #Write a program to analyze the different types of Stemmers and Lemmatizer
+
+
+        import nltk
+        from nltk.stem import PorterStemmer, LancasterStemmer, SnowballStemmer
+        from nltk.stem import WordNetLemmatizer
+
+        nltk.download('wordnet')
+
+        porter = PorterStemmer()
+        lancaster = LancasterStemmer()
+        snowball = SnowballStemmer("english")
+        lemmatizer = WordNetLemmatizer()
+
+        # Words for analysis
+        words = ["running", "flies", "mules", "denied", "flying", "generously"]
+
+        for word in words:
+        porter_stemmed = porter.stem(word)
+        lancaster_stemmed = lancaster.stem(word)
+        snowball_stemmed = snowball.stem(word)
+        lemmatized = lemmatizer.lemmatize(word, pos="v")
+        print(f"Original: {word}")
+        print(f"Porter: {porter_stemmed}")
+        print(f"Lancaster: {lancaster_stemmed}")
+        print(f"Snowball: {snowball_stemmed}")
+        print(f"Lemmatized (as verb): {lemmatized}")
+        print("-" * 30)
+    </p>
+    <br>
+    <p>
+        #10.Write a program to decide whether a given string belongs to the language of
+        #grammar or not using Cocke-Younger-Kasami Algorithm.
+
+
+
+        def CYK_algorithm(string, grammar):
+        n = len(string)
+        r = len(grammar)
+
+        # Initialize a 3D table to store the results
+        T = [[[False] * n for _ in range(n)] for _ in range(r)]
+
+        # Fill the table for substrings of length 1
+        for s in range(n):
+        for variable in grammar:
+        for production in grammar[variable]:
+        if len(production) == 1 and production[0] == string[s]:
+        T[variable][s][s] = True
+
+        # Fill the table for substrings of length 2 to n
+        for l in range(2, n + 1):
+        for s in range(n - l + 1):
+        for p in range(1, l):
+        for variable in grammar:
+        for production in grammar[variable]:
+        if len(production) == 2:
+        B, C = production
+        if any(T[B][s][s + p - 1] and T[C][s + p][s + l - 1] for p in range(1, l)):
+        T[variable][s][s + l - 1] = True
+
+        # The string belongs to the language if the start symbol (assumed here as 0) spans the whole string
+        return T[0][0][n - 1]
+
+        # Example Usage
+        grammar = {
+        0: [[1, 2]], # S → AB
+        1: [[3, 4]], # A → CD
+        2: [['b']], # B → b
+        3: [['c']], # C → c
+        4: [['d']] # D → d
+        }
+
+        string = "cb"
+        print(CYK_algorithm(string, grammar))
+    </p>
+    <br>
+    <p>
+        #11.Write a program to implement the minimum edit distance for converting
+        #source string to the target string following the dynamic programming
+        #approach given the cost of insertion as 1, cost of deletion as 1 and cost of
+        #substation as 1.
+        #Input: i) A source string ii) A target string
+        #Eg: Source String =” intention”, “Piece” ii) Target String=” execution”, “Peace”
+
+
+        def minimum_edit_distance(source, target, memo=None):
+        if memo is None:
+        memo = {}
+
+
+        if (len(source), len(target)) in memo:
+        return memo[(len(source), len(target))]
+
+
+        if len(source) == 0:
+        return len(target)
+        if len(target) == 0:
+        return len(source)
+        if source[-1] == target[-1]:
+        memo[(len(source), len(target))] = minimum_edit_distance(source[:-1], target[:-1], memo)
+        else:
+
+        insert_cost = 1 + minimum_edit_distance(source, target[:-1], memo)
+        delete_cost = 1 + minimum_edit_distance(source[:-1], target, memo)
+        replace_cost = 1 + minimum_edit_distance(source[:-1], target[:-1], memo)
+
+        memo[(len(source), len(target))] = min(insert_cost, delete_cost, replace_cost)
+
+        return memo[(len(source), len(target))]
+
+        # Example usage
+        source1, target1 = "intention", "execution"
+        source2, target2 = "Piece", "Peace"
+
+        edit_distance1 = minimum_edit_distance(source1, target1)
+        edit_distance2 = minimum_edit_distance(source2, target2)
+
+        print("Minimum Edit Distance (intention -> execution):", edit_distance1)
+        print("Minimum Edit Distance (Piece -> Peace):", edit_distance2)
+    </p>
+    <br>
+    <p>
+        #12.Write a program identify nouns and adjectives from the given sentence and
+        #calculates the overall sentiment score of the extracted adjectives using
+        #Chunking in natural language processing (NLP)
+
+        import nltk
+        from nltk import pos_tag, word_tokenize, RegexpParser
+        from nltk.sentiment import SentimentIntensityAnalyzer
+        nltk.download('averaged_perceptron_tagger')
+        nltk.download('punkt')
+        nltk.download('vader_lexicon')
+
+        def extract_nouns_adjectives(sentence):
+        words = word_tokenize(sentence)
+        tagged_words = pos_tag(words)
+        grammar = "NP: {<DT>?<JJ>*<NN>}"
+                    cp = RegexpParser(grammar)
+                    chunked = cp.parse(tagged_words)
+                    nouns = []
+                    adjectives = []
+                    for subtree in chunked:
+                    if type(subtree) == nltk.tree.Tree and subtree.label() == 'NP':
+                    for word, tag in subtree.leaves():
+                    if tag.startswith('JJ'):
+                    adjectives.append(word)
+                    elif tag.startswith('NN'):
+                    nouns.append(word)
+                    return nouns, adjectives
+
+                    def calculate_sentiment(adjectives):
+                    # Sentiment analysis
+                    sia = SentimentIntensityAnalyzer()
+                    total_sentiment = 0
+
+                    for adj in adjectives:
+                    sentiment_score = sia.polarity_scores(adj)
+                    total_sentiment += sentiment_score['compound']
+
+                    return total_sentiment
+
+                    # Example sentence
+                    sentence = "The quick brown fox is a joyful, clever animal."
+
+                    # Extract nouns and adjectives
+                    nouns, adjectives = extract_nouns_adjectives(sentence)
+
+                    # Calculate sentiment
+                    sentiment_score = calculate_sentiment(adjectives)
+
+                    print("Nouns:", nouns)
+                    print("Adjectives:", adjectives)
+                    print("Total Sentiment Score of Adjectives:", sentiment_score)
+    </p>
+    <br>
+    <p>
+        #14.Write a program to conduct the case study on SMS Spam Detection Analysis
+        #using Natural language processing. Use an spam.csv data set
+
+        import numpy as np
+        import pandas as pd
+        import matplotlib.pyplot as plt
+        import seaborn as sns
+        !pip install wordcloud
+        from wordcloud import WordCloud
+        from nltk.corpus import stopwords
+
+
+        # Set plotting style
+        sns.set_style("darkgrid") # Options: darkgrid, whitegrid, dark, white, ticks
+
+
+        # Load the dataset
+        messages = pd.read_csv('spam.csv', encoding='latin-1')
+        messages = messages.drop(labels=["Unnamed: 2", "Unnamed: 3", "Unnamed: 4"], axis=1)
+        messages.columns = ["label", "message"]
+
+        messages.info()
+        messages.describe()
+        messages.groupby('label').describe().T
+
+        messages["label"].value_counts().plot(
+        kind='pie', explode=[0, 0.1], figsize=(6, 6),
+        autopct='%1.1f%%', shadow=True
+        )
+        plt.title("Spam vs Ham")
+        plt.legend(["Ham", "Spam"])
+        plt.show()
+
+        # Text Pre-processing
+        def text_preprocess(mess):
+        nopunc = [char for char in mess if char not in string.punctuation]
+        nopunc = ''.join(nopunc)
+        nopunc = nopunc.lower()
+        nostop = [word for word in nopunc.split() if word.lower() not in stopwords.words('english') and word.isalpha()]
+        return nostop
+
+        # Count number of spam and ham messages
+        spam_messages = messages[messages["label"] == "spam"]["message"]
+        ham_messages = messages[messages["label"] == "ham"]["message"]
+        print("No of spam messages : ", len(spam_messages))
+        print("No of ham messages : ", len(ham_messages))
+
+        # Wordcloud for Spam Messages
+        spam_words = text_preprocess(spam_messages.str.cat(sep=' '))
+        spam_wordcloud = WordCloud(width=600, height=400).generate(' '.join(spam_words))
+        plt.figure(figsize=(10, 8), facecolor='k')
+        plt.imshow(spam_wordcloud)
+        plt.axis("off")
+        plt.tight_layout(pad=0)
+        plt.show()
+
+        print("Top 10 Spam words are :\n")
+        print(pd.Series(spam_words).value_counts().head(10))
+
+        # Wordcloud for Ham Messages
+        ham_words = text_preprocess(ham_messages.str.cat(sep=' '))
+        ham_wordcloud = WordCloud(width=600, height=400).generate(' '.join(ham_words))
+        plt.figure(figsize=(10, 8), facecolor='k')
+        plt.imshow(ham_wordcloud)
+        plt.axis("off")
+        plt.tight_layout(pad=0)
+        plt.show()
+    </p>
+</body>
+
+</html>
