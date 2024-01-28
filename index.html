@@ -376,6 +376,39 @@
     </p>
     <br>
     <p>
+        from nltk import ngrams
+from collections import Counter
+from nltk.tokenize import word_tokenize
+
+def find_top_5_bi_grams(c):
+    words = word_tokenize(c)
+
+    # Generate bi-grams using NLTK's ngrams function
+    bi_grams = list(ngrams(words, 2))
+    
+    # Count the occurrences of each bi-gram
+    counter = Counter(bi_grams)
+
+    # Display the top 5 most common bi-grams
+    top_5_bi_grams = counter.most_common(5)
+    print("\nTop 5 most common bi-grams:")
+    for bi_gram, frequency in top_5_bi_grams:
+        print(f"{bi_gram}: {frequency} times")
+
+if _name_ == "_main_":
+    # Example collection of 3 documents
+    document1 = "This is the first document. It contains some words."
+    document2 = "The second document is here. It has different content."
+    document3 = "This is the third document. It shares words with the first document."
+
+    # Concatenate the documents to form a single string
+    c = document1 + " " + document2 + " " + document3
+
+    # Find and display the top 5 bi-grams
+    find_top_5_bi_grams(c)            
+    </p>
+    <br>
+    <p>
         #Write a program to analyze the different types of Stemmers and Lemmatizer
 
 
